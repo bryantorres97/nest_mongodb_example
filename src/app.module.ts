@@ -4,7 +4,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CERT_NAME, MONGODB_URI } from './config/constants.config';
+import {
+  CERT_NAME,
+  MONGODB_URI,
+  MONGO_SSL_CONFIG,
+} from './config/constants.config';
 import { ProductsModule } from './products/products.module';
 
 @Module({
@@ -21,19 +25,28 @@ import { ProductsModule } from './products/products.module';
 
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>(MONGODB_URI),
-        ssl: true,
-        sslValidate: true,
-        sslKey: `${__dirname}/../certs/${configService.get<string>(CERT_NAME)}`,
-        sslCert: `${__dirname}/../certs/${configService.get<string>(
-          CERT_NAME,
-        )}`,
-        authMechanism: 'MONGODB-X509',
-        retryWrites: true,
-        w: 'majority',
-        authSource: '$external',
-      }),
+      useFactory: async (configService: ConfigService) => {
+        if (configService.get<boolean>(MONGO_SSL_CONFIG)) {
+          const sslFile = `${__dirname}/../certs/${configService.get<string>(
+            CERT_NAME,
+          )}`;
+          return {
+            uri: configService.get<string>(MONGODB_URI),
+            ssl: true,
+            sslValidate: true,
+            sslKey: sslFile,
+            sslCert: sslFile,
+            authMechanism: 'MONGODB-X509',
+            retryWrites: true,
+            w: 'majority',
+            authSource: '$external',
+          };
+        }
+
+        return {
+          uri: configService.get<string>(MONGODB_URI),
+        };
+      },
       inject: [ConfigService],
     }),
 
