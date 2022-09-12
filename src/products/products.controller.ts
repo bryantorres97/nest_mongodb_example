@@ -15,7 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { getError } from '../common/helpers';
 import { ProductsService } from './products.service';
-import { CreateProductDTO, UpdateProductDTO } from './dtos/';
+import { CreateProductDto, UpdateProductDto } from './dtos/';
 
 @ApiTags('Products')
 @Controller('products')
@@ -52,7 +52,7 @@ export class ProductsController {
   }
 
   @Post()
-  async createProduct(@Res() res: Response, @Body() product: CreateProductDTO) {
+  async createProduct(@Res() res: Response, @Body() product: CreateProductDto) {
     try {
       this.logger.log(`Creating product: ${JSON.stringify(product, null, 2)}`);
       const newProduct = await this.productsService.createProduct(product);
@@ -70,7 +70,7 @@ export class ProductsController {
   async updateProduct(
     @Res() res: Response,
     @Param('id') _id: string,
-    @Body() product: UpdateProductDTO,
+    @Body() product: UpdateProductDto,
   ) {
     try {
       this.logger.log(
