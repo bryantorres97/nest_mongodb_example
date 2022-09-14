@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { userModelName } from './schemas/user.schema';
 import { User } from './classes/user.class';
 import { CreateUserDto, GetUserDto, UpdateUserDto } from './dtos';
+import { IUser } from '../users/schemas/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -37,5 +38,11 @@ export class UsersService {
       { isActive: false },
       { new: true },
     );
+  }
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.userModel.findOne<IUser>({ email, isActive: true });
+    if (user && (await user.comparePassword(password))) return user;
+    return null;
   }
 }
