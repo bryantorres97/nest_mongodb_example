@@ -10,8 +10,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      // forbidNonWhitelisted: true,
+      // whitelist: true, // Elimina los datos que no estan en el DTO (no recomendado)
+      // forbidNonWhitelisted: true, // Lanza un error si se envian datos que no estan en el DTO (no recomendado)
     }),
   );
   app.enableCors();
