@@ -2,3 +2,6 @@ export const SERVER_PORT = 'SERVER_PORT';
 export const MONGODB_URI = 'MONGODB_URI';
 export const MONGO_SSL_CONFIG = 'MONGO_SSL_CONFIG';
 export const CERT_NAME = 'CERT_NAME';
+export const JWT_SECRET = 'JWT_SECRET';
+export const JWT_EXPIRES_IN = 'JWT_EXPIRES_IN';
+export const JWT_RESTORE_EXPIRES_IN = 'JWT_RESTORE_EXPIRES_IN';

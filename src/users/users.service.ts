@@ -32,6 +32,15 @@ export class UsersService {
     );
   }
 
+  /**
+   * Elimina un usuario del sistema qu coincida con el id proporcionado
+   *
+   * @param _id - Identificador del usuario a eliminar
+   *
+   * @returns un usuario que se encuetra en estado inactivo
+   *
+   * @internal
+   */
   async deleteUser(_id: string): Promise<User> {
     return await this.userModel.findOneAndUpdate(
       { _id, isActive: true },
@@ -43,6 +52,26 @@ export class UsersService {
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userModel.findOne<IUser>({ email, isActive: true });
     if (user && (await user.comparePassword(password))) return user;
+    return null;
+  }
+
+  /**
+   * Cambia la contraseña de un usuario
+   *
+   * @param _id - Identificador del usuario a actualizar
+   * @param password - Nueva contraseña del usuario
+   *
+   * @returns el usuario actualizado
+   *
+   * @internal
+   */
+  async changePassword(_id: string, password: string): Promise<User> {
+    const user = await this.userModel.findOne({ _id, isActive: true });
+    if (user) {
+      user.password = password;
+      return await user.save();
+    }
+
     return null;
   }
 }
