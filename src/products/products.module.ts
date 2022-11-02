@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { productModelName, productSchema } from './schemas/product.schema';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ProductsService } from './products.service';
         },
       },
     ]),
+    HttpModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

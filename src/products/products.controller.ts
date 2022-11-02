@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Res,
+  Headers,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -102,6 +103,36 @@ export class ProductsController {
       if (!deletedProduct)
         throw new NotFoundException('No se ha podido eliminar el producto');
       return res.json(deletedProduct);
+    } catch (error) {
+      this.logger.error(error);
+      const errorData = getError(error);
+      res.status(errorData.statusCode).json(errorData);
+    }
+  }
+
+  @Get('filter/posts')
+  async getPosts(@Res() res: Response) {
+    try {
+      const posts = await this.productsService.getPosts();
+      return res.json(posts);
+    } catch (error) {
+      this.logger.error(error);
+      const errorData = getError(error);
+      res.status(errorData.statusCode).json(errorData);
+    }
+  }
+
+  @Post('filter/posts')
+  async createPost(
+    @Res() res: Response,
+    @Body() post: any,
+    @Headers('token') token: string,
+  ) {
+    try {
+      this.logger.log(`Creating post: ${JSON.stringify(post, null, 2)}`);
+      this.logger.log(`Token: ${token}`);
+      const newPost = await this.productsService.postPosts(post, token);
+      return res.json(newPost);
     } catch (error) {
       this.logger.error(error);
       const errorData = getError(error);

@@ -28,7 +28,7 @@ import { AuthModule } from './auth/auth.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        if (configService.get<boolean>(MONGO_SSL_CONFIG)) {
+        if (configService.get<boolean>(MONGO_SSL_CONFIG) == true) {
           const sslFile = `${__dirname}/../certs/${configService.get<string>(
             CERT_NAME,
           )}`;
